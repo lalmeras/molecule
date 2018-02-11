@@ -98,7 +98,8 @@ class Prepare(base.Base):
     '--force/--no-force',
     default=False,
     help='Enable or disable force mode. Default is disabled.')
-def prepare(ctx, scenario_name, driver_name, force):  # pragma: no cover
+@base.host_option()
+def prepare(ctx, scenario_name, host, driver_name, force):  # pragma: no cover
     """
     Use the provisioner to prepare the instances into a particular starting
     state.
@@ -109,6 +110,7 @@ def prepare(ctx, scenario_name, driver_name, force):  # pragma: no cover
         'subcommand': subcommand,
         'driver_name': driver_name,
         'force': force,
+        'host': host
     }
 
     s = scenarios.Scenarios(

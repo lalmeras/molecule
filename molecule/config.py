@@ -70,7 +70,8 @@ class Config(object):
                  molecule_file,
                  args={},
                  command_args={},
-                 ansible_args=()):
+                 ansible_args=(),
+                 host=None):
         """
         Initialize a new config class and returns None.
 
@@ -89,6 +90,7 @@ class Config(object):
         self.command_args = command_args
         self.ansible_args = ansible_args
         self.config = self._combine()
+        self.host=host
         self._action = None
 
     @property

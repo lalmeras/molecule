@@ -23,6 +23,8 @@ import collections
 import glob
 import os
 
+import click
+
 import molecule.command
 from molecule import config
 from molecule import logger
@@ -30,6 +32,16 @@ from molecule import util
 
 LOG = logger.get_logger(__name__)
 MOLECULE_GLOB = 'molecule/*/molecule.yml'
+
+def host_option():
+    def decorator(f):
+        return click.option(
+            '--host',
+            default=None,
+            metavar='HOST',
+            help='Name of the host to filter platforms.'
+                 ' (no filtering by default)')(f)
+    return decorator
 
 
 class Base(object):
@@ -116,7 +128,9 @@ def get_configs(args, command_args, ansible_args=()):
             molecule_file=util.abs_path(c),
             args=args,
             command_args=command_args,
-            ansible_args=ansible_args, ) for c in glob.glob(MOLECULE_GLOB)
+            ansible_args=ansible_args,
+            host=command_args.get('host', None)
+        ) for c in glob.glob(MOLECULE_GLOB)
     ]
     _verify_configs(configs)
 

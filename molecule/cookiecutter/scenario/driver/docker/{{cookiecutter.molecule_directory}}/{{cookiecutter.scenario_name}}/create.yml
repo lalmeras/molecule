@@ -10,12 +10,13 @@
     molecule_ephemeral_directory: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}"
     molecule_scenario_directory: "{{ lookup('env', 'MOLECULE_SCENARIO_DIRECTORY') }}"
     molecule_yml: "{{ lookup('file', molecule_file) | molecule_from_yaml }}"
+    molecule_platforms: "{{ molecule_yml.platforms | molecule_filter_platforms(groups['all']) }}"
   tasks:
     - name: Create Dockerfiles from image names
       template:
         src: "{{ molecule_scenario_directory }}/Dockerfile.j2"
         dest: "{{ molecule_ephemeral_directory }}/Dockerfile_{{ item.image | regex_replace('[^a-zA-Z0-9_]', '_') }}"
-      with_items: "{{ molecule_yml.platforms }}"
+      with_items: "{{ molecule_platforms }}"
       register: platforms
 
     - name: Discover local Docker images
@@ -37,7 +38,7 @@
       docker_network:
         name: "{{ item }}"
         state: present
-      with_items: "{{ molecule_yml.platforms | molecule_get_docker_networks }}"
+      with_items: "{{ molecule_platforms | molecule_get_docker_networks }}"
 
     - name: Create molecule instance(s)
       docker_container:
@@ -56,7 +57,7 @@
         networks: "{{ item.networks | default(omit) }}"
         dns_servers: "{{ item.dns_servers | default(omit) }}"
       register: server
-      with_items: "{{ molecule_yml.platforms }}"
+      with_items: "{{ molecule_platforms }}"
       async: 7200
       poll: 0
 

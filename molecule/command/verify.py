@@ -60,12 +60,14 @@ class Verify(base.Base):
     '-s',
     default='default',
     help='Name of the scenario to target. (default)')
-def verify(ctx, scenario_name):  # pragma: no cover
+@base.host_option()
+def verify(ctx, scenario_name, host):  # pragma: no cover
     """ Run automated tests against instances. """
     args = ctx.obj.get('args')
     subcommand = base._get_subcommand(__name__)
     command_args = {
         'subcommand': subcommand,
+        'host': host
     }
 
     s = scenarios.Scenarios(

@@ -123,7 +123,8 @@ class Idempotence(base.Base):
     '-s',
     default='default',
     help='Name of the scenario to target. (default)')
-def idempotence(ctx, scenario_name):  # pragma: no cover
+@base.host_option()
+def idempotence(ctx, scenario_name, host):  # pragma: no cover
     """
     Use the provisioner to configure the instances and parse the output to
     determine idempotence.
@@ -132,6 +133,7 @@ def idempotence(ctx, scenario_name):  # pragma: no cover
     subcommand = base._get_subcommand(__name__)
     command_args = {
         'subcommand': subcommand,
+        'host': host
     }
 
     s = scenarios.Scenarios(

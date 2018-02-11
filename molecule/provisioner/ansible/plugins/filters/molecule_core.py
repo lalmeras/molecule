@@ -44,6 +44,8 @@ def from_yaml(data):
 def to_yaml(data):
     return str(util.safe_dump(data))
 
+def filter_platforms(data, inventory):
+    return list([ i for i in data if i['name'] in inventory ])
 
 def header(content):
     return util.molecule_prepender(content)
@@ -69,4 +71,5 @@ class FilterModule(object):
             'molecule_to_yaml': to_yaml,
             'molecule_header': header,
             'molecule_get_docker_networks': get_docker_networks,
+            'molecule_filter_platforms': filter_platforms,
         }

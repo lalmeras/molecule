@@ -84,13 +84,15 @@ class Create(base.Base):
     '-d',
     type=click.Choice(config.molecule_drivers()),
     help='Name of driver to use. (docker)')
-def create(ctx, scenario_name, driver_name):  # pragma: no cover
+@base.host_option()
+def create(ctx, scenario_name, host, driver_name):  # pragma: no cover
     """ Use the provisioner to start the instances. """
     args = ctx.obj.get('args')
     subcommand = base._get_subcommand(__name__)
     command_args = {
         'subcommand': subcommand,
         'driver_name': driver_name,
+        'host': host
     }
 
     s = scenarios.Scenarios(

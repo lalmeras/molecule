@@ -92,13 +92,15 @@ class Destroy(base.Base):
     '__all',
     default=False,
     help='Destroy all scenarios. Default is False.')
-def destroy(ctx, scenario_name, driver_name, __all):  # pragma: no cover
+@base.host_option()
+def destroy(ctx, scenario_name, host, driver_name, __all):  # pragma: no cover
     """ Use the provisioner to destroy the instances. """
     args = ctx.obj.get('args')
     subcommand = base._get_subcommand(__name__)
     command_args = {
         'subcommand': subcommand,
         'driver_name': driver_name,
+        'host': host
     }
 
     if __all:

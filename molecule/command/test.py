@@ -88,7 +88,8 @@ class Test(base.Base):
     default='always',
     help=('The destroy strategy used at the conclusion of a '
           'Molecule run (always).'))
-def test(ctx, scenario_name, driver_name, __all, destroy):  # pragma: no cover
+@base.host_option()
+def test(ctx, scenario_name, host, driver_name, __all, destroy):  # pragma: no cover
     """
     Test (lint, destroy, dependency, syntax, create, prepare, converge,
           idempotence, side_effect, verify, destroy).
@@ -100,6 +101,7 @@ def test(ctx, scenario_name, driver_name, __all, destroy):  # pragma: no cover
         'destroy': destroy,
         'subcommand': subcommand,
         'driver_name': driver_name,
+        'host': host
     }
 
     if __all:

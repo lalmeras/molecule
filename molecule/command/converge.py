@@ -68,8 +68,9 @@ class Converge(base.Base):
     '-s',
     default='default',
     help='Name of the scenario to target. (default)')
+@base.host_option()
 @click.argument('ansible_args', nargs=-1, type=click.UNPROCESSED)
-def converge(ctx, scenario_name, ansible_args):  # pragma: no cover
+def converge(ctx, scenario_name, host, ansible_args):  # pragma: no cover
     """
     Use the provisioner to configure instances (dependency, create, prepare
     converge).
@@ -79,6 +80,7 @@ def converge(ctx, scenario_name, ansible_args):  # pragma: no cover
     subcommand = base._get_subcommand(__name__)
     command_args = {
         'subcommand': subcommand,
+        'host': host
     }
 
     s = scenarios.Scenarios(

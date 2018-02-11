@@ -65,7 +65,7 @@ class Platforms(object):
               - child_group1
     """
 
-    def __init__(self, config):
+    def __init__(self, config, host=None):
         """
         Initialize a new platform class and returns None.
 
@@ -76,4 +76,8 @@ class Platforms(object):
 
     @property
     def instances(self):
-        return self._config.config['platforms']
+        if self._config.host is not None:
+            return [ i for i in self._config.config['platforms']
+                     if i['name'] == self._config.host ]
+        else:
+            return self._config.config['platforms']

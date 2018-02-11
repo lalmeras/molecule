@@ -8,6 +8,7 @@
   vars:
     molecule_file: "{{ lookup('env', 'MOLECULE_FILE') }}"
     molecule_yml: "{{ lookup('file', molecule_file) | molecule_from_yaml }}"
+    molecule_platforms: "{{ molecule_yml.platforms | molecule_filter_platforms(groups['all']) }}"
   tasks:
     - name: Destroy molecule instance(s)
       docker_container:
@@ -15,7 +16,7 @@
         state: absent
         force_kill: "{{ item.force_kill | default(true) }}"
       register: server
-      with_items: "{{ molecule_yml.platforms }}"
+      with_items: "{{ molecule_platforms }}"
       async: 7200
       poll: 0
 
@@ -31,5 +32,5 @@
       docker_network:
         name: "{{ item }}"
         state: absent
-      with_items: "{{ molecule_yml.platforms | molecule_get_docker_networks }}"
+      with_items: "{{ molecule_platforms | molecule_get_docker_networks }}"
 {%- endraw %}
